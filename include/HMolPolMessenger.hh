@@ -25,6 +25,7 @@ class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithAString;
 class G4UIcmdWithABool;
+class G4UIcmdWithoutParameter;
 
 //HMolPol classes included
 class HMolPolPrimaryGeneratorAction;
@@ -76,6 +77,9 @@ class HMolPolMessenger : public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fRasYCmd; ///< raster x size
 
     G4UIcmdWithADoubleAndUnit* fBeamECmd; ///< beam energy
+
+    G4UIcmdWithoutParameter* fInitializeMagFields; ///< Initialize mag fields
+    G4UIdirectory*           fMagneticDir; ///< All magnetic command directory
 
 };
 

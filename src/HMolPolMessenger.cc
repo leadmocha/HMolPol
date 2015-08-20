@@ -27,11 +27,13 @@
 #include <G4UIcmdWithAString.hh>
 #include <G4UIcmdWithADoubleAndUnit.hh>
 #include <G4UIcmdWithABool.hh>
+#include <G4UIcmdWithoutParameter.hh>
 
 //HMolPol includes
 #include "HMolPolPrimaryGeneratorAction.hh"
 #include "HMolPolAnalysis.hh"
 #include "HMolPolMessenger.hh"
+#include "HMolPolHallAMagnetManager.hh"
 
 //standard includes
 #include <iostream>
@@ -102,6 +104,15 @@ HMolPolMessenger::HMolPolMessenger(
   fBeamECmd->SetGuidance("Beam Energy");
   fBeamECmd->SetParameterName("BeamEnergy", false);
 
+  //---------------------------------------------------------------------------
+  // Create a new directory for all the magnetic field related properties
+  fMagneticDir = new G4UIdirectory("/HMolPol/Magnetic/");
+  fMagneticDir->SetGuidance("Control magnetic elements");
+
+  // Initialize magnets
+  fInitializeMagFields = new G4UIcmdWithoutParameter(
+      "/HMolPol/Magnetic/InitializeMagneticFields",this);
+  fInitializeMagFields->SetGuidance("Initializes Magnetic Field");
 }
 
 /********************************************
@@ -135,6 +146,10 @@ HMolPolMessenger::~HMolPolMessenger()
   //Delete beam energy info
   if(fBeamECmd)         delete fBeamECmd;
 
+  // Delete magnetic field related commands
+  if(fInitializeMagFields)
+    delete fInitializeMagFields;
+  if(fMagneticDir)      delete fMagneticDir;
 }
 
 /********************************************
@@ -204,6 +219,19 @@ void HMolPolMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4cout << "#### Messenger: Setting Beam Energy to "
         << newValue << G4endl;
     fPrimaryGeneratorAction->SetBeamE(fBeamECmd->GetNewDoubleValue(newValue));
+    if(HMolPolHallAMagnetManager::ManagerExists())
+      HMolPolHallAMagnetManager::GetManager()->SetBeamEnergy(
+          fBeamECmd->GetNewDoubleValue(newValue));
+  }
+
+  // Initialize Magnetic field
+  if( command == fInitializeMagFields )
+  {
+    G4cout << "#### Messenger: Initializing Magnetic Fields " << G4endl;
+
+    // If Hall A magnets are being used, initialize those.
+    if(HMolPolHallAMagnetManager::ManagerExists())
+      HMolPolHallAMagnetManager::GetManager()->InitializeMagneticFields();
   }
 
   return;

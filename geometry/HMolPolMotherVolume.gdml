@@ -44,8 +44,10 @@
     <position name="RightDetectorCenter" x="0.09" y="0" z="3.0" unit="m" />
 
     <!-- position of the Left Detector (and all its parts) in the "World" -->
-     <position name="LeftDetectorCenter" x="-0.09" y="0" z="3.0" unit="m" />
+    <position name="LeftDetectorCenter" x="-0.09" y="0" z="3.0" unit="m" />
 
+    <!-- position of the Hall A Magnets with respect to the "World" -->
+    <position name="HallAMollerMagnetsCenter" x="0.0" y="0.0" z="1.8456" unit="m" />
 
   </define>
 
@@ -56,14 +58,13 @@
   <solids>
 
     <box name="MotherVolumeBox" x="World_X_length" y="World_Y_length" z="World_Z_length" />
-
   </solids>
 
   <structure>
 
     <!-- Define the logical mother volume -->
     <volume name="logicalMotherVol">
-      <materialref ref="G4_AIR" />
+      <materialref ref="AirVacuum" />
       <solidref ref="MotherVolumeBox" />
 
       <!-- Add in all the daughter geometries, these are all written in different 
@@ -73,15 +74,20 @@
         <positionref ref="HGasTargetCenter" />
       </physvol>
 
+      <!-- Disabling Dummy detectors. They overlap the Hall A Moller Magnets -->
+<!--
       <physvol name="Dummy">
         <file name="geometry/dummy.gdml" />
         <positionref ref="DummyCenter" />
       </physvol>
+    -->
 <!-- more dubbiging -->
+<!--
       <physvol name="Dummy2">
         <file name="geometry/dummy.gdml" />
         <positionref ref="DummyCenter2" />
       </physvol>
+    -->
 
       <physvol name="RightDetector">
         <file name="geometry/detector.gdml" />
@@ -93,7 +99,14 @@
         <positionref ref="LeftDetectorCenter" />
       </physvol>
 
+      <!-- Include the Hall A Magnets -->
+      <physvol>
+        <file name="geometry/HallAMollerMagnets.gdml" />
+        <positionref ref="HallAMollerMagnetsCenter" />
+      </physvol>
+
     </volume>
+
   </structure>
 
   <!-- I am not sure what all this does, sets up something for the implementation 

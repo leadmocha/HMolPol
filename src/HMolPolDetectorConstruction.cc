@@ -36,6 +36,7 @@
 //HMolPol includes
 #include "HMolPolDetectorConstruction.hh"
 #include "HMolPolHSolenoidMagField.hh"
+#include "HMolPolHallAMagnetManager.hh"
 #include "HMolPolGenericDetector.hh"
 #include "HMolPolAnalysis.hh"
 
@@ -471,6 +472,15 @@ G4VPhysicalVolume* HMolPolDetectorConstruction::Construct()
          {
            G4cerr << "Sensitive Detector not found: " << detectorname << G4endl;
          }
+      }
+      // This volume represents a magnetic field modeled after the
+      // Hall A Moller polarimeter, which has three quadrupoles and
+      // one dipole.
+      if( ipair->type == "HallAMagnet" )
+      {
+        HMolPolHallAMagnetManager *hallAManager =
+          HMolPolHallAMagnetManager::GetManager();
+        hallAManager->AddMagnet(ipair->value,*pvciter);
       }
     }
   }
