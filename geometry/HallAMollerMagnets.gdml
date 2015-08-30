@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdml[
+<!ENTITY materials SYSTEM "materials.gdml">
+]>
+
+<gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+
+  <define>
+    <!-- Length of the Magnetic World -->
+    <quantity name="HallAMagnetsWorldLength" value="209.76" unit="cm" />
+
+    <!-- Position & Dimension of Quad 1 with respect to "Magnet World" -->
+    <position name="Quad1Center" x="0.000" y="0.000" z="-84.56" unit="cm" />
+    <rotation name="Quad1RotationZ" z="45" unit="deg" />
+    <quantity name="Quad1RMin" value="0.000" unit="cm" />
+    <quantity name="Quad1RMax" value="5.1" unit="cm" />
+    <quantity name="Quad1DimZ" value="16*2.54" unit="cm" />
+
+    <!-- Position & Dimension of Quad 2 with respect to "Magnet World" -->
+    <position name="Quad2Center" x="0.000" y="0.000" z="23.94" unit="cm" />
+    <rotation name="Quad2RotationZ" z="45" unit="deg" />
+    <quantity name="Quad2RMin" value="0.000" unit="cm" />
+    <quantity name="Quad2RMax" value="5.1" unit="cm" />
+    <quantity name="Quad2DimZ" value="12*2.54" unit="cm" />
+
+    <!-- Position & Dimension of Quad 3 with respect to "Magnet World" -->
+    <position name="Quad3Center" x="0.000" y="0.000" z="89.64" unit="cm" />
+    <rotation name="Quad3RotationZ" z="45" unit="deg" />
+    <quantity name="Quad3RMin" value="0.000" unit="cm" />
+    <quantity name="Quad3RMax" value="5.1" unit="cm" />
+    <quantity name="Quad3DimZ" value="12*2.54" unit="cm" />
+
+  </define>
+
+  &materials;
+
+  <solids>
+
+    <!-- Define the solid of the Hall A Moller Magnets "World" -->
+    <tube name="HallAMollerMagnetsSolid" rmin="Quad2RMin" rmax="Quad2RMax"
+        startphi="0.0" deltaphi="360.0" aunit="degree"
+        z="HallAMagnetsWorldLength" />
+
+    <!-- Define the tube of the Quads -->
+    <tube name="Quad1Tube" rmin="Quad1RMin" rmax="Quad1RMax"
+        z="Quad1DimZ" startphi="0.0" deltaphi="360.0" aunit="degree" />
+    <tube name="Quad2Tube" rmin="Quad2RMin" rmax="Quad2RMax"
+        z="Quad2DimZ" startphi="0.0" deltaphi="360.0" aunit="degree" />
+    <tube name="Quad3Tube" rmin="Quad3RMin" rmax="Quad3RMax"
+        z="Quad3DimZ" startphi="0.0" deltaphi="360.0" aunit="degree" />
+
+  </solids>
+
+  <structure>
+
+    <!-- Define the Quadrupole Volumes -->
+    <volume name="Quad1Volume" >
+      <materialref ref="AirVacuum" />
+      <solidref ref="Quad1Tube" />
+      <auxiliary auxtype="HallAMagnet" auxvalue="Q1" />
+      <auxiliary auxtype="Alpha" auxvalue="0.1" />
+    </volume>
+
+    <volume name="Quad2Volume" >
+      <materialref ref="AirVacuum" />
+      <solidref ref="Quad2Tube" />
+      <auxiliary auxtype="HallAMagnet" auxvalue="Q2" />
+      <auxiliary auxtype="Alpha" auxvalue="0.1" />
+    </volume>
+
+    <volume name="Quad3Volume" >
+      <materialref ref="AirVacuum" />
+      <solidref ref="Quad3Tube" />
+      <auxiliary auxtype="HallAMagnet" auxvalue="Q3" />
+      <auxiliary auxtype="Alpha" auxvalue="0.1" />
+    </volume>
+
+    <!-- Define the Hall A Magnet "World" -->
+    <volume name="HallAMollerMagnetsWorld"  >
+      <materialref ref="AirVacuum" />
+      <solidref ref="HallAMollerMagnetsSolid" />
+
+      <physvol name="Quad1">
+        <volumeref ref="Quad1Volume" />
+        <positionref ref="Quad1Center" />
+        <rotationref ref="Quad1RotationZ" />
+      </physvol>
+
+      <physvol name="Quad2">
+        <volumeref ref="Quad2Volume" />
+        <positionref ref="Quad2Center" />
+        <rotationref ref="Quad2RotationZ" />
+      </physvol>
+
+      <physvol name="Quad3">
+        <volumeref ref="Quad3Volume" />
+        <positionref ref="Quad3Center" />
+        <rotationref ref="Quad3RotationZ" />
+      </physvol>
+
+      <auxiliary auxtype="Alpha" auxvalue="0.1" />
+      <auxiliary auxtype="Color" auxvalue="lightgray" />
+    </volume>
+
+  </structure>
+
+  <setup name="HallAMollerMagnetsWorldSetup" version="1.0">
+    <world ref="HallAMollerMagnetsWorld" />
+  </setup>
+
+</gdml>
